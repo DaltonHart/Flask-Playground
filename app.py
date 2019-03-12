@@ -42,7 +42,7 @@ def after_request(response):
 
 @app.route('/')
 def index():
-    return 'hi'
+    return render_template('home.html')
 
 
 @app.route('/register', methods=('GET', 'POST'))
@@ -60,19 +60,12 @@ def register():
     return render_template('register.html', form=form)
 
 
-if __name__ == '__main__':
-    models.initialize()
-    try:
-        models.User.create_user(
-            username='jimbo',
-            email="jim@jim.com",
-            password='password',
-            admin=True
-        )
-    except ValueError:
-        pass
-
-    app.run(debug=DEBUG, port=PORT)
+@app.route('/logout')
+@login_required
+def logout():
+    logout_user()
+    flash("You've been logged out", "success")
+    return redirect(url_for('index'))
 
 
 @app.route('/login', methods=('GET', 'POST'))
@@ -92,3 +85,18 @@ def login():
             else:
                 flash("your email or password doesn't match", "error")
     return render_template('login.html', form=form)
+
+
+if __name__ == '__main__':
+    models.initialize()
+    try:
+        models.User.create_user(
+            username='jimbo',
+            email="jim@jim.com",
+            password='password',
+            admin=True
+        )
+    except ValueError:
+        pass
+
+    app.run(debug=DEBUG, port=PORT)
