@@ -1,29 +1,42 @@
-# Import Flask class from flask library. (Note the upper/lowercase convention.)
-from flask import Flask, render_template
+from flask import Flask, g
 
-# Initialize an instance of the Flask class.
-# This starts the website!
+import models
+
+DEBUG = True
+PORT = 8000
+
 app = Flask(__name__)
 
-# The default URL ends in / ("my-website.com/").
-# Could be instead "my-website.com/about" or anything - more on this later.
+
+@app.before_request
+def before_request():
+    """Connect to the database before each request."""
+    g.db = models.DATABASE
+    g.db.connect()
+
+
+@app.after_request
+def after_request(response):
+    """Close the database connection after each request."""
+    g.db.close()
+    return response
 
 
 @app.route('/')
-def home():
-    return render_template("index.html", greeting="Hello World!")
+def index():
+    return 'hi'
 
 
-@app.route('/template')
-def temp():
-    return render_template("injectedTemp.html")
-
-
-@app.route('/sayhi/<username>')  # When someone goes here...
-def hello(username):  # Do this.
-    return f"Hello {username}"
-
-
-# Run the app when the program starts!
 if __name__ == '__main__':
-    app.run(debug=True)
+    models.initialize()
+    try:
+        models.User.create_user(
+            username='jimbo',
+            email="jim@jim.com",
+            password='password',
+            admin=True
+        )
+    except ValueError:
+        pass
+
+    app.run(debug=DEBUG, port=PORT)
