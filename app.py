@@ -45,6 +45,21 @@ def index():
     return 'hi'
 
 
+@app.route('/register', methods=('GET', 'POST'))
+def register():
+    form = forms.RegisterForm()
+    if form.validate_on_submit():
+        flash('Yay you registered', 'success')
+        models.User.create_user(
+            username=form.username.data,
+            email=form.email.data,
+            password=form.password.data
+        )
+
+        return redirect(url_for('index'))
+    return render_template('register.html', form=form)
+
+
 if __name__ == '__main__':
     models.initialize()
     try:
