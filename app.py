@@ -15,7 +15,7 @@ def home():
 
 
 @app.route('/template')
-def home():
+def temp():
     return render_template("injectedTemp.html")
 
 
