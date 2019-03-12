@@ -14,6 +14,11 @@ def home():
     return render_template("index.html", greeting="Hello World!")
 
 
+@app.route('/template')
+def home():
+    return render_template("injectedTemp.html")
+
+
 @app.route('/sayhi/<username>')  # When someone goes here...
 def hello(username):  # Do this.
     return f"Hello {username}"
