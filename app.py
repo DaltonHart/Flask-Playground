@@ -1,5 +1,5 @@
 # Import Flask class from flask library. (Note the upper/lowercase convention.)
-from flask import Flask
+from flask import Flask, render_template
 
 # Initialize an instance of the Flask class.
 # This starts the website!
@@ -10,9 +10,8 @@ app = Flask(__name__)
 
 
 @app.route('/')
-# Function that returns the page: Display "Hello, World!"
-def index():
-    return 'whoa'
+def home():
+    return render_template("index.html", greeting="Hello World!")
 
 
 @app.route('/sayhi/<username>')  # When someone goes here...
