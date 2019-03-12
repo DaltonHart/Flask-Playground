@@ -1,0 +1,16 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<h1>POSTS</h1>
+{% for post in stream %}
+<div class="card" style="width: 18rem;">
+    <time data-time="{{ post.timestamp }}" class="distime" datetime="{{ post.timestamp.strftime('%Y-%m-%d %H:%M') }}">{{
+        post.timestamp.strftime('%Y-%m-%d %H:%M') }}</time>
+    <h5 class="card-title"><a class="btn btn-primary" href="{{ url_for('stream', username=post.user.username) }}">{{
+            post.user.username }}</a></h5>
+    <div class="card-body">
+        <p class="card-text">{{ post.content }}</p>
+    </div>
+</div>
+{% endfor %}
+{% endblock %}
